@@ -1,3 +1,5 @@
+__precompile__()
+
 """
 # TauPy
 
@@ -11,23 +13,31 @@ teleseismic phases.
 """
 module TauPy
 
-using PyCall
-
-@pyimport obspy.taup as Taup
-
 export
     Phase,
     path,
     travel_time,
     turning_depth
 
+using PyCall
+
+function __init__()
+    copy!(Taup, pyimport_conda("obspy.taup", "obspy", "conda-forge"))
+    for m in AVAILABLE_MODELS
+        global MODEL[m] = Taup[:TauPyModel](m)
+        global RADIUS[m] = MODEL[m][:model][:radius_of_planet]
+    end
+end
+
+const Taup = PyNULL()
+
 const TauPyFloat = Float64
 const AVAILABLE_MODELS = ("1066a", "1066b", "ak135", # "ak135f", # FIXME: Doesn't work
                           "ak135f_no_mud", "herrin",
                           "iasp91", "jb", "prem", "pwdk", "sp6")
 const DEFAULT_MODEL = "ak135"
-const MODEL = Dict{String,PyObject}((m,Taup.TauPyModel(m)) for m in AVAILABLE_MODELS)
-const RADIUS = Dict{String,TauPyFloat}((m,MODEL[m][:model][:radius_of_planet]) for m in AVAILABLE_MODELS)
+const MODEL = Dict{String,PyObject}()
+const RADIUS = Dict{String,TauPyFloat}()
 
 """
     Phase(model, name, delta, depth, time, dtdd, inc, takeoff)

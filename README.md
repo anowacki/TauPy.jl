@@ -5,7 +5,15 @@ Calculate properties of teleseismic arrivals through a selection of
 
 ## Install
 
+```julia
 Pkg.clone(https://github.com/anowacki/TauPy.jl)
+```
+
+This package uses [PyCall.jl](https://github.com/JuliaPy/PyCall.jl) package to
+access ObsPy.  If you have the default PyCall installation, then ObsPy will be
+installed automatically via its own Conda environment.  If you use your own
+Python with PyCall, then you may need to install ObsPy for you installation
+via `conda`, `pip`, or another means.
 
 ## Use
 
