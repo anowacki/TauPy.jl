@@ -1,0 +1,90 @@
+# Geographic phases
+
+"""
+    PhaseGeog(model, name, evlon, evlat, depth, time, dtdd, inc, takeoff)
+    PhaseGeog(..., pierce, lon, lat, radius)
+
+Construct a `Phase3Geog, which represents a single event-station path and one signle phase
+arrival between two geographic points.
+"""
+struct PhaseGeog{T} <: AbstractPhase
+    model::String
+    name::String
+    evlon::T
+    evlat::T
+    stlon::T
+    stlat::T
+    depth::T
+    delta::T
+    time::T
+    dtdd::T
+    inc::T
+    takeoff::T
+    pierce::Vector{T}
+    lon::Vector{T}
+    lat::Vector{T}
+    radius::Vector{T}
+end
+PhaseGeog(model, name, evlon, evlat, stlon, stlat, depth, delta, time, dtdd, inc, takeoff) = 
+    PhaseGeog{TauPyFloat}(model, name, evlon, evlat, stlon, stlat, depth, delta, time,
+                          dtdd, inc, takeoff, [], [], [], [])
+PhaseGeog(p::PhaseGeog, pierce, lon, lat, radius) =
+    PhaseGeog{TauPyFloat}(p.model, p.name, p.evlon, p.evlat, p.evlon, p.evlat, p.depth,
+                          p.delta, p.time, p.dtdd, p.inc, p.takeoff, pierce, lon, lat, radius)
+
+
+"""
+    path(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model="$DEFAULT_MODEL") -> Vector{PhaseGeog}
+
+Create a set of `PhaseGeogs` which contain the computed ray path for a set of `phase`s
+from event at (`event_lon`, `event_lat`)° and `depth` km deep, recorded at a station
+at (`station_lon`, `station_lat`)°.  Optionally specify the model (one of
+$(AVAILABLE_MODELS)).
+"""
+function path(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall";
+              model=DEFAULT_MODEL)
+    phase = phase isa AbstractString ? [phase] : phase
+    arr = MODEL[model][:get_ray_paths_geo](depth, event_lat, event_lon, station_lat,
+                                           station_lon, phase)
+    _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, station_lat)
+end
+
+"""
+    travel_time(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model="$DEFAULT_MODEL") -> Vector{Phase}
+
+Return a `Vector` of `PhaseGeog`s, given an event `depth` km deep located at
+(`event_lon`, `event_lat`)°, recorded at a station at (`station_lon`, `station_lat`)°.
+Optionally specify the model (one of: $(AVAILABLE_MODELS)).
+"""
+function travel_time(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model=DEFAULT_MODEL)
+    phase = phase isa AbstractString ? [phase] : phase
+    arr = MODEL[model][:get_travel_times_geo](depth, event_lat, event_lon, station_lat,
+                                              station_lon, phase)
+    _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, station_lat)
+end
+
+"""Helper function which takes `obspy.taup.Arrivals` and returns `PhaseGeog`s."""
+function _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, station_lat)
+    p = Vector{PhaseGeog{TauPyFloat}}()
+    for a in arr
+        name = a[:name]
+        delta = a[:distance]
+        depth = a[:source_depth]
+        time = a[:time]
+        dtdd = deg2rad(a[:ray_param])
+        inc = a[:incident_angle]
+        takeoff = a[:takeoff_angle]
+        path = a[:path]
+        lon, lat, radius = if path === nothing
+            TauPyFloat[], TauPyFloat[], TauPyFloat[]
+        else
+            pathlist = path[:tolist]()
+            rad2deg.([pp[6] for pp in pathlist]), rad2deg.([pp[5] for pp in pathlist]),
+                RADIUS[model] .- [pp[4] for pp in pathlist]
+        end
+        push!(p, PhaseGeog{TauPyFloat}(model, name, event_lon, event_lat, station_lon,
+                                       station_lat, depth, delta, time, dtdd, inc, takeoff,
+                                       [], lon, lat, radius))
+    end
+    p
+end

@@ -15,6 +15,13 @@ installed automatically via its own Conda environment.  If you use your own
 Python with PyCall, then you may need to install ObsPy for you installation
 via `conda`, `pip`, or another means.
 
+If you want to use the local PyCall conda install, but are having problems,
+you can try rebuilding PyCall to use this:
+
+```julia
+julia> ENV["PYTHON"] = ""; Pkg.build("PyCall")
+```
+
 ## Use
 
 Use the `travel_time` function to quickly calculate the arrival time, slowness, and
@@ -60,3 +67,5 @@ julia> turning_depth.(p)
  660.0  
 
 ```
+
+If you want to know the geographical
