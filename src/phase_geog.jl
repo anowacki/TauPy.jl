@@ -79,7 +79,7 @@ function _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, st
             TauPyFloat[], TauPyFloat[], TauPyFloat[]
         else
             pathlist = path[:tolist]()
-            rad2deg.([pp[6] for pp in pathlist]), rad2deg.([pp[5] for pp in pathlist]),
+            [pp[6] for pp in pathlist], [pp[5] for pp in pathlist],
                 RADIUS[model] .- [pp[4] for pp in pathlist]
         end
         push!(p, PhaseGeog{TauPyFloat}(model, name, event_lon, event_lat, station_lon,
