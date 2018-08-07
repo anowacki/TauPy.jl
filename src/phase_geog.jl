@@ -58,6 +58,8 @@ Create a set of `PhaseGeogs` which contain the computed ray path for a set of `p
 from event at (`event_lon`, `event_lat`)° and `depth` km deep, recorded at a station
 at (`station_lon`, `station_lat`)°.  Optionally specify the model (one of
 $(AVAILABLE_MODELS)).
+
+If no arrivals are found for the geometry, an empty `Vector{Phase}` is returned.
 """
 function path(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall";
               model=DEFAULT_MODEL)
@@ -73,6 +75,8 @@ end
 Return a `Vector` of `PhaseGeog`s, given an event `depth` km deep located at
 (`event_lon`, `event_lat`)°, recorded at a station at (`station_lon`, `station_lat`)°.
 Optionally specify the model (one of: $(AVAILABLE_MODELS)).
+
+If no arrivals are found for the geometry, an empty `Vector{Phase}` is returned.
 """
 function travel_time(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model=DEFAULT_MODEL)
     phase = phase isa AbstractString ? [phase] : phase

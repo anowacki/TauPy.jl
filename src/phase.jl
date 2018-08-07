@@ -50,6 +50,8 @@ end
 Create a set of `Phase`s `p` which contain the computed ray path for a set of `phase`s
 from an event `depth` km deep and at `distance`° away.
 Optionally specify the `model` (one of: $(AVAILABLE_MODELS)).
+
+If no arrivals are found for the geometry, an empty `Vector{Phase}` is returned.
 """
 function path(depth, distance, phase="ttall"; model=DEFAULT_MODEL)
     phase = phase isa AbstractString ? [phase] : phase
@@ -63,6 +65,8 @@ end
 Return a `Vector` of `Phase`s, given an event `depth` km deep and `distance`°
 away.  Optionally specify a `phase` name; otherwise all arrivals are returned.
 Optionally specify the model (one of: $(AVAILABLE_MODELS)).
+
+If no arrivals are found for the geometry, an empty `Vector{Phase}` is returned.
 """
 function travel_time(depth, distance, phase="ttall"; model=DEFAULT_MODEL)
     phase = phase isa AbstractString ? [phase] : phase
