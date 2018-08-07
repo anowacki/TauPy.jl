@@ -45,7 +45,7 @@ using PyCall
 
 function __init__()
     # This is just to make sure geographiclib is installed for geographic ray paths
-    pyimport_conda("geographiclib", "geographiclib")
+    pyimport_conda("geographiclib", "geographiclib", "conda-forge")
     copy!(Taup, pyimport_conda("obspy.taup", "obspy", "conda-forge"))
     for m in AVAILABLE_MODELS
         global MODEL[m] = Taup[:TauPyModel](m)
