@@ -40,9 +40,9 @@ export
 using PyCall
 
 function __init__()
-    copy!(Taup, pyimport_conda("obspy.taup", "obspy", "conda-forge"))
-    # This is just to make sure geographiclib is installed
+    # This is just to make sure geographiclib is installed for geographic ray paths
     pyimport_conda("geographiclib", "geographiclib")
+    copy!(Taup, pyimport_conda("obspy.taup", "obspy", "conda-forge"))
     for m in AVAILABLE_MODELS
         global MODEL[m] = Taup[:TauPyModel](m)
         global RADIUS[m] = MODEL[m][:model][:radius_of_planet]

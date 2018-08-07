@@ -1,5 +1,5 @@
 using TauPy
-using Base.Test
+using Compat.Test
 
 @testset "Phase" begin
     @testset "Time" begin
