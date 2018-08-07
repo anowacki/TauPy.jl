@@ -129,7 +129,7 @@ julia> p = path(110, 20, "P")
 
 ```
 
-If you want to know the arrivals&rsquo; turning depths, then `turning_depths`
+If you want to know the arrivals&rsquo; turning depths, then `turning_depth`
 is what you want:
 
 ```julia
