@@ -4,8 +4,26 @@
     PhaseGeog(model, name, evlon, evlat, depth, time, dtdd, inc, takeoff)
     PhaseGeog(..., pierce, lon, lat, radius)
 
-Construct a `Phase3Geog, which represents a single event-station path and one signle phase
+Construct a `Phase3Geog, which represents a single event-station path and one single phase
 arrival between two geographic points.
+
+
+`PhaseGeog` objects have the following fields:
+
+- `model`: Name of model used to calculate phase properties
+- `name`: Name of phase
+- `evlon`, `evlat`, `depth`: Event longitude and latitude (in °) and depth (in km)
+- `stlon`, `stlat`: Station longitude and latitude in °
+- `delta`: Epicentral distance in °
+- `time`: Travel time in s
+- `dtdd`: Horizontal slowness (ray parameter) in s/°
+- `inc`: Incidence angle at receiver, measured from downwards in °
+- `takeoff`: Takeoff angle at source, measured from downwards in °
+
+The following fields are filled if the ray path has been calculated via `path`:
+
+- `lon`, `lat: `Vector`s of geographic coodinates in ° along the path
+- `radius`: `Vector` of radii in km along the path
 """
 struct PhaseGeog{T} <: AbstractPhase
     model::String

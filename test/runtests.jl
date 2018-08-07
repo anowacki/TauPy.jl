@@ -71,6 +71,22 @@ using Compat.Test
             @test turning_depth(p[1]) == TauPy.RADIUS[p[1].model] - minimum(p[1].radius)
         end
     end
+
+    @testset "Operators" begin
+        let p = travel_time(100, 60, "ScS"), p′ = travel_time(100, 60, "ScS"),
+                q = travel_time(100, 60, "PcP")
+            # Vectors of Phases
+            @test p == p
+            @test p == p′
+            @test p == deepcopy(p)
+            @test (p == q) == false
+            # Individual Phases
+            @test p[1] == p[1]
+            @test p[1] == p′[1]
+            @test p[1] == deepcopy(p[1])
+            @test (p[1] == q[1]) == false
+        end
+    end
 end
 
 @testset "PhaseGeog" begin
@@ -94,6 +110,23 @@ end
             @test p[1].lon ≈ Float64[]
             @test p[1].lat ≈ Float64[]
             @test p[1].radius ≈ Float64[]
+        end
+    end
+
+    @testset "Operators" begin
+        let p = travel_time(0, 0, 300, 30, 30, "ScS"),
+                p′ = travel_time(0, 0, 300, 30, 30, "ScS"),
+                q = travel_time(0, 0, 300, 30, 30, "PcP")
+            # Vectors of Phases
+            @test p == p
+            @test p == p′
+            @test p == deepcopy(p)
+            @test (p == q) == false
+            # Individual Phases
+            @test p[1] == p[1]
+            @test p[1] == p′[1]
+            @test p[1] == deepcopy(p[1])
+            @test (p[1] == q[1]) == false
         end
     end
 

@@ -4,8 +4,24 @@
     Phase(model, name, delta, depth, time, dtdd, inc, takeoff)
     Phase(..., pierce, distance, radius)
 
-Construct a `Phase1D`, which represents a single event-station path and one single phase
+Construct a `Phase`, which represents a single event-station path and one single phase
 arrival.
+
+`Phase` objects have the following fields:
+
+- `model`: Name of model used to calculate phase properties
+- `name`: Name of phase
+- `delta`: Epicentral distance in °
+- `depth`: Depth of event below surface in km
+- `time`: Travel time in s
+- `dtdd`: Horizontal slowness (ray parameter) in s/°
+- `inc`: Incidence angle at receiver, measured from downwards in °
+- `takeoff`: Takeoff angle at source, measured from downwards in °
+
+The following fields are filled if the ray path has been calculated via `path`:
+
+- `distance`: `Vector` of distances in ° along the path
+- `radius`: `Vector` of radii in km along the path
 """
 struct Phase{T} <: AbstractPhase
     model::String
@@ -29,35 +45,28 @@ function Phase(p::AbstractPhase, pierce::AbstractVector, distance::AbstractVecto
 end
 
 """
-    path(depth, distance, phase="all"; model="$DEFAULT_MODEL") -> p::Vector{Phase}
+    path(depth, distance, phase="ttall"; model="$DEFAULT_MODEL") -> p::Vector{Phase}
 
-Create a set of `Phase`s which contain the computed ray path for a set of `phase`s
+Create a set of `Phase`s `p` which contain the computed ray path for a set of `phase`s
 from an event `depth` km deep and at `distance`° away.
+Optionally specify the `model` (one of: $(AVAILABLE_MODELS)).
 """
-function path(depth, distance, phase="all"; model=DEFAULT_MODEL)
-    arr = if phase == "all"
-        MODEL[model][:get_ray_paths](depth, distance)
-    else
-        phase = phase isa AbstractString ? [phase] : phase
-        MODEL[model][:get_ray_paths](depth, distance, phase)
-    end
+function path(depth, distance, phase="ttall"; model=DEFAULT_MODEL)
+    phase = phase isa AbstractString ? [phase] : phase
+    arr = MODEL[model][:get_ray_paths](depth, distance, phase)
     _phases_from_arrivals(arr, model)
 end
 
 """
-    travel_time(depth, distance, phase="all"; model="$DEFAULT_MODEL") -> Vector{Phase}
+    travel_time(depth, distance, phase="ttall"; model="$DEFAULT_MODEL") -> p::Vector{Phase}
 
 Return a `Vector` of `Phase`s, given an event `depth` km deep and `distance`°
-away.  Optionally specify a phase name; otherwise all arrivals are returned.
+away.  Optionally specify a `phase` name; otherwise all arrivals are returned.
 Optionally specify the model (one of: $(AVAILABLE_MODELS)).
 """
-function travel_time(depth, distance, phase="all"; model=DEFAULT_MODEL)
-    arr = if phase == "all"
-        MODEL[model][:get_travel_times](depth, distance)
-    else
-        phase = phase isa AbstractString ? [phase] : phase
-        MODEL[model][:get_travel_times](depth, distance, phase)
-    end
+function travel_time(depth, distance, phase="ttall"; model=DEFAULT_MODEL)
+    phase = phase isa AbstractString ? [phase] : phase
+    arr = MODEL[model][:get_travel_times](depth, distance, phase)
     _phases_from_arrivals(arr, model)
 end
 
