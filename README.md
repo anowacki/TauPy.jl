@@ -3,6 +3,10 @@
 Calculate properties of teleseismic arrivals through a selection of
 1D Earth models, using the [ObsPy](https://github.com/obspy/obspy/wiki) Python software.
 
+[![Build Status](https://travis-ci.org/anowacki/TauPy.jl.svg?branch=master)](https://travis-ci.org/anowacki/TauPy.jl)
+[![Build status](https://ci.appveyor.com/api/projects/status/x0g14wuls8yp19tv/branch/master?svg=true)](https://ci.appveyor.com/project/AndyNowacki/taupy-jl/branch/master)
+[![Coverage Status](https://coveralls.io/repos/github/anowacki/TauPy.jl/badge.svg?branch=master)](https://coveralls.io/github/anowacki/TauPy.jl?branch=master)
+
 ## Install
 
 ```julia
