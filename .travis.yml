@@ -5,27 +5,21 @@ os:
   - osx
 julia:
   - 0.6
+  - 0.7
+  - 1.0
   - nightly
+
 notifications:
   email: false
-git:
-  depth: 99999999
 
 matrix:
   allow_failures:
-  - julia: nightly
+    - julia: nightly
 
-## uncomment and modify the following lines to manually install system packages
-#addons:
-#  apt: # apt-get for linux
-#    packages:
-#    - gfortran
-#before_script: # homebrew for mac
-#  - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc; fi
+env:
+  global:
+    - PYTHON=""
 
-## uncomment the following lines to override the default test script
-script:
-  - julia -e 'ENV["PYTHON"]=""; Pkg.clone(pwd()); Pkg.build("TauPy"); Pkg.test("TauPy"; coverage=true)'
 after_success:
   # push coverage results to Coveralls
-  - julia -e 'cd(Pkg.dir("TauPy")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia -e 'VERSION >= v"0.7.0-DEV.5183" && import Pkg; cd(Pkg.dir("TauPy")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
