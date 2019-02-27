@@ -66,31 +66,32 @@ Set `cache` to `false` to always recompute the ray path and ignore the module ca
 function path(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall";
               model=DEFAULT_MODEL, cache=true)
     phase = phase isa AbstractString ? [phase] : phase
-    _call_taup(:get_ray_paths_geo, model, depth, event_lat, event_lon,
+    _call_taup(:get_ray_paths_geo, model, depth, event_lat, event_lon, depth,
                station_lat, station_lon, phase; cache=cache)
-    # arr = MODEL[model][:get_ray_paths_geo](depth, event_lat, event_lon, station_lat,
-    #                                        station_lon, phase)
-    # _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, station_lat)
 end
 
 """
-    travel_time(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model="$DEFAULT_MODEL") -> Vector{Phase}
+    travel_time(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model="$DEFAULT_MODEL", cache=true) -> Vector{PhaseGeog}
 
 Return a `Vector` of `PhaseGeog`s, given an event `depth` km deep located at
 (`event_lon`, `event_lat`)°, recorded at a station at (`station_lon`, `station_lat`)°.
 Optionally specify the model (one of: $(AVAILABLE_MODELS)).
 
 If no arrivals are found for the geometry, an empty `Vector{Phase}` is returned.
+
+Set `cache` to `false` to always recompute the ray path and ignore the module cache.
 """
-function travel_time(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model=DEFAULT_MODEL)
+function travel_time(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall";
+                     model=DEFAULT_MODEL, cache=true)
     phase = phase isa AbstractString ? [phase] : phase
-    arr = MODEL[model][:get_travel_times_geo](depth, event_lat, event_lon, station_lat,
-                                              station_lon, phase)
-    _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, station_lat)
+    _call_taup(:get_travel_times_geo, model, depth, event_lat, event_lon, station_lat, station_lon, phase; cache=cache)
 end
 
-"""Helper function which takes `obspy.taup.Arrivals` and returns `PhaseGeog`s."""
-function _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, station_lat)
+"""Helper function which takes `obspy.taup.Arrivals` and returns `PhaseGeog`s.
+Arguments should be the same as those passed to osbpy.taup calls, prefixed
+by `model`."""
+function _phases_from_arrivals(arr, model, depth, event_lat, event_lon,
+                               station_lat, station_lon, phase)
     p = Vector{PhaseGeog{TauPyFloat}}()
     for a in arr
         name = a[:name]

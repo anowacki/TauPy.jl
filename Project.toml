@@ -1,7 +1,7 @@
 name = "TauPy"
 uuid = "fa53487c-c63f-11e8-170c-e7abdb8d2806"
 authors = ["Andy Nowacki <a.nowacki@leeds.ac.uk>"]
-version = "0.3.0"
+version = "0.3.1"
 
 [deps]
 PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"

@@ -4,6 +4,7 @@ using Test
 @testset "Phase" begin
     @testset "Time" begin
         let p = travel_time(300, 60, "PcS", model="prem")
+            @test p isa Vector{<:Phase}
             @test length(p) == 1
             @test p[1].model == "prem"
             @test p[1].name == "PcS"
@@ -93,6 +94,7 @@ end
     @testset "Time" begin
         # Test against taup_time, and assume we're on a spherical Earth
         let p = travel_time(0, 0, 300, 30, 30, "PcS", model="prem")
+            @test p isa Vector{<:PhaseGeog}
             @test length(p) == 1
             @test p[1].model == "prem"
             @test p[1].name == "PcS"

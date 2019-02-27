@@ -121,7 +121,7 @@ function _call_taup(func::Symbol, model, args...; cache=true)
     arr = if cache && haskey(RAY_CACHE, key)
         get_cache(key)
     else
-        arr = _phases_from_arrivals(MODEL[model][func](args...), model)
+        arr = _phases_from_arrivals(MODEL[model][func](args...), model, args...)
         cache && update_cache!(key, arr)
         arr
     end

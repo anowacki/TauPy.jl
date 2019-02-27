@@ -76,8 +76,10 @@ function travel_time(depth, distance, phase="ttall"; model=DEFAULT_MODEL, cache=
     _call_taup(:get_travel_times, model, depth, distance, phase; cache=cache)
 end
 
-"""Helper function which takes `obspy.taup.Arrivals` and returns `Phase`s."""
-function _phases_from_arrivals(arr, model)
+"""Helper function which takes `obspy.taup.Arrivals` and returns `Phase`s.
+Arguments should be the same as those to osbpy.taup calls, prefixed
+by `model`."""
+function _phases_from_arrivals(arr, model, depth, distance, phase)
     p = Vector{Phase{TauPyFloat}}()
     for a in arr
         name = a[:name]
