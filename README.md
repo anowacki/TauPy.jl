@@ -161,3 +161,15 @@ julia> p = path(event_lon, event_lat, dep, sta_lon, sta_lat, "S")
 
 Similarly, `travel_time` also accepts five geographic arguments if you know the
 event and station coordinates.
+
+### Calculation cache
+
+Unfortunately, Obspy's travel time and raypath calculations are somewhat
+slow.  To speed up repeated calculations of the same times and raypaths,
+TauPy implements a cache.  To set the size of the cache, use the
+`TauPy.set_cache_size_mb!(size_mb)` function.  The cache can be clared
+using `TauPy.clear_cache!()`.  These functions are not exported.
+
+To disable the cache for individual calls to `path` or `travel_time`,
+pass the keyword argument `cache=false`.
+
