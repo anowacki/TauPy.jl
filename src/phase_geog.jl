@@ -66,7 +66,7 @@ Set `cache` to `false` to always recompute the ray path and ignore the module ca
 function path(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall";
               model=DEFAULT_MODEL, cache=true)
     phase = phase isa AbstractString ? [phase] : phase
-    _call_taup(:get_ray_paths_geo, model, depth, event_lat, event_lon, depth,
+    _call_taup(:get_ray_paths_geo, model, depth, event_lat, event_lon,
                station_lat, station_lon, phase; cache=cache)
 end
 

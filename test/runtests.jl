@@ -132,8 +132,24 @@ end
         end
     end
 
-    # TODO: Add tests
     @testset "Path" begin
+        let elon = 0, elat = 0, depth = 100, slon = 45, slat = 45, phase = "P", model = "ak135"
+            p = path(elon, elat, depth, slon, slat, "P", model=model)
+            @test p isa Vector{<:PhaseGeog}
+            @test length(p) == 1
+            @test p[1].delta ≈ 60.0
+            @test p[1].dtdd ≈ 6.835 atol=0.001
+            @test p[1].evlon ≈ elon
+            @test p[1].evlat ≈ elat
+            @test p[1].stlon ≈ slon
+            @test p[1].stlat ≈ slat
+            @test p[1].inc ≈ 20.888 atol=0.001
+            @test p[1].model == model
+            @test p[1].takeoff ≈ 30.173 atol=0.001
+            @test p[1].time ≈ 595.99 atol=0.01
+            @test p[1].radius[1:5] ≈ [6271.00, 6270.44, 6251.00, 6249.18, 6247.37] atol=0.1
+            @test length(p[1].lon) == length(p[1].lat) == length(p[1].radius)
+        end
     end
 
     @testset "Cache" begin
