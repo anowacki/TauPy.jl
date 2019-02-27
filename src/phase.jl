@@ -45,33 +45,35 @@ function Phase(p::AbstractPhase, pierce::AbstractVector, distance::AbstractVecto
 end
 
 """
-    path(depth, distance, phase="ttall"; model="$DEFAULT_MODEL") -> p::Vector{Phase}
+    path(depth, distance, phase="ttall"; model="$DEFAULT_MODEL", cache=true) -> p::Vector{Phase}
 
 Create a set of `Phase`s `p` which contain the computed ray path for a set of `phase`s
 from an event `depth` km deep and at `distance`° away.
 Optionally specify the `model` (one of: $(AVAILABLE_MODELS)).
 
 If no arrivals are found for the geometry, an empty `Vector{Phase}` is returned.
+
+Set `cache` to `false` to always recompute the ray path and ignore the module cache.
 """
-function path(depth, distance, phase="ttall"; model=DEFAULT_MODEL)
+function path(depth, distance, phase="ttall"; model=DEFAULT_MODEL, cache=true)
     phase = phase isa AbstractString ? [phase] : phase
-    arr = MODEL[model][:get_ray_paths](depth, distance, phase)
-    _phases_from_arrivals(arr, model)
+    _call_taup(:get_ray_paths, model, depth, distance, phase; cache=cache)
 end
 
 """
-    travel_time(depth, distance, phase="ttall"; model="$DEFAULT_MODEL") -> p::Vector{Phase}
+    travel_time(depth, distance, phase="ttall"; model="$DEFAULT_MODEL", cache=true) -> p::Vector{Phase}
 
 Return a `Vector` of `Phase`s, given an event `depth` km deep and `distance`°
 away.  Optionally specify a `phase` name; otherwise all arrivals are returned.
 Optionally specify the model (one of: $(AVAILABLE_MODELS)).
 
 If no arrivals are found for the geometry, an empty `Vector{Phase}` is returned.
+
+Set `cache` to `false` to always recompute the travel time and ignore the module cache.
 """
-function travel_time(depth, distance, phase="ttall"; model=DEFAULT_MODEL)
+function travel_time(depth, distance, phase="ttall"; model=DEFAULT_MODEL, cache=true)
     phase = phase isa AbstractString ? [phase] : phase
-    arr = MODEL[model][:get_travel_times](depth, distance, phase)
-    _phases_from_arrivals(arr, model)
+    _call_taup(:get_travel_times, model, depth, distance, phase; cache=cache)
 end
 
 """Helper function which takes `obspy.taup.Arrivals` and returns `Phase`s."""

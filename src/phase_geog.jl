@@ -52,7 +52,7 @@ PhaseGeog(p::PhaseGeog, pierce, lon, lat, radius) =
 
 
 """
-    path(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model="$DEFAULT_MODEL") -> Vector{PhaseGeog}
+    path(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall"; model="$DEFAULT_MODEL", cache=true) -> Vector{PhaseGeog}
 
 Create a set of `PhaseGeogs` which contain the computed ray path for a set of `phase`s
 from event at (`event_lon`, `event_lat`)° and `depth` km deep, recorded at a station
@@ -60,13 +60,17 @@ at (`station_lon`, `station_lat`)°.  Optionally specify the model (one of
 $(AVAILABLE_MODELS)).
 
 If no arrivals are found for the geometry, an empty `Vector{Phase}` is returned.
+
+Set `cache` to `false` to always recompute the ray path and ignore the module cache.
 """
 function path(event_lon, event_lat, depth, station_lon, station_lat, phase="ttall";
-              model=DEFAULT_MODEL)
+              model=DEFAULT_MODEL, cache=true)
     phase = phase isa AbstractString ? [phase] : phase
-    arr = MODEL[model][:get_ray_paths_geo](depth, event_lat, event_lon, station_lat,
-                                           station_lon, phase)
-    _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, station_lat)
+    _call_taup(:get_ray_paths_geo, model, depth, event_lat, event_lon,
+               station_lat, station_lon, phase; cache=cache)
+    # arr = MODEL[model][:get_ray_paths_geo](depth, event_lat, event_lon, station_lat,
+    #                                        station_lon, phase)
+    # _phases_from_arrivals(arr, model, event_lon, event_lat, station_lon, station_lat)
 end
 
 """

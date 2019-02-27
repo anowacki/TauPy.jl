@@ -133,4 +133,18 @@ end
     # TODO: Add tests
     @testset "Path" begin
     end
+
+    @testset "Cache" begin
+        let Δ = rand(1:90), h = rand(0:700), phase = "P", model = "sp6"
+            TauPy.clear_cache!()
+            @test length(TauPy.RAY_CACHE) == length(TauPy.RAY_NCALLS) == 0
+            p = travel_time(h, Δ, phase, model=model)
+            @test first(values(TauPy.RAY_NCALLS)) == 1
+            p′ = travel_time(h, Δ, phase, model=model)
+            @test first(values(TauPy.RAY_NCALLS)) == 2
+            @test p == p′
+            @test travel_time(h, Δ, phase, model=model, cache=false) == p
+            @test first(values(TauPy.RAY_NCALLS)) == 2
+        end
+    end
 end

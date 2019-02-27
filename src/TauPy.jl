@@ -90,6 +90,7 @@ end
 
 include("phase.jl")
 include("phase_geog.jl")
+include("memo.jl")
 
 """
     available_models()
@@ -106,5 +107,24 @@ Throw an error if the path has not been calculated.
 """
 turning_depth(p::AbstractPhase) = length(p.radius) > 0 ? RADIUS[p.model] - minimum(p.radius) :
     error("No path calculated for phase")
+
+"""
+    _call_taup(taup_function, model, args...; cache=true) -> arrivals
+
+Generic routine to call the Obspy taup module and process the arguments into a vector
+of `Phase`s or `PhaseGeog`s.
+
+`taup_function` is a `Symbol` giving the name of the obspy.taup function to call.
+"""
+function _call_taup(func::Symbol, model, args...; cache=true)
+    key = cache_args_key(func, model, args...)
+    arr = if cache && haskey(RAY_CACHE, key)
+        get_cache(key)
+    else
+        arr = _phases_from_arrivals(MODEL[model][func](args...), model)
+        cache && update_cache!(key, arr)
+        arr
+    end
+end
 
 end # module
