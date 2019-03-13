@@ -94,18 +94,18 @@ function _phases_from_arrivals(arr, model, depth, event_lat, event_lon,
                                station_lat, station_lon, phase)
     p = Vector{PhaseGeog{TauPyFloat}}()
     for a in arr
-        name = a[:name]
-        delta = a[:distance]
-        depth = a[:source_depth]
-        time = a[:time]
-        dtdd = deg2rad(a[:ray_param])
-        inc = a[:incident_angle]
-        takeoff = a[:takeoff_angle]
-        path = a[:path]
+        name = a.name
+        delta = a.distance
+        depth = a.source_depth
+        time = a.time
+        dtdd = deg2rad(a.ray_param)
+        inc = a.incident_angle
+        takeoff = a.takeoff_angle
+        path = a.path
         lon, lat, radius = if path === nothing
             TauPyFloat[], TauPyFloat[], TauPyFloat[]
         else
-            pathlist = path[:tolist]()
+            pathlist = path.tolist()
             [pp[6] for pp in pathlist], [pp[5] for pp in pathlist],
                 RADIUS[model] .- [pp[4] for pp in pathlist]
         end

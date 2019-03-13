@@ -82,18 +82,18 @@ by `model`."""
 function _phases_from_arrivals(arr, model, depth, distance, phase)
     p = Vector{Phase{TauPyFloat}}()
     for a in arr
-        name = a[:name]
-        delta = a[:distance]
-        depth = a[:source_depth]
-        time = a[:time]
-        dtdd = deg2rad(a[:ray_param])
-        inc = a[:incident_angle]
-        takeoff = a[:takeoff_angle]
-        path = a[:path]
+        name = a.name
+        delta = a.distance
+        depth = a.source_depth
+        time = a.time
+        dtdd = deg2rad(a.ray_param)
+        inc = a.incident_angle
+        takeoff = a.takeoff_angle
+        path = a.path
         distance, radius = if path === nothing
             TauPyFloat[], TauPyFloat[]
         else
-            pathlist = path[:tolist]()
+            pathlist = path.tolist()
             rad2deg.([pp[3] for pp in pathlist]), RADIUS[model] .- [pp[4] for pp in pathlist]
         end
         push!(p, Phase{TauPyFloat}(model, name, delta, depth, time, dtdd, inc, takeoff,
