@@ -4,7 +4,7 @@
     PhaseGeog(model, name, evlon, evlat, depth, time, dtdd, inc, takeoff)
     PhaseGeog(..., pierce, lon, lat, radius)
 
-Construct a `Phase3Geog, which represents a single event-station path and one single phase
+Construct a `PhaseGeog`, which represents a single event-station path and one single phase
 arrival between two geographic points.
 
 
