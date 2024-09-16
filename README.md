@@ -3,13 +3,12 @@
 Calculate properties of teleseismic arrivals through a selection of
 1D Earth models, using the [ObsPy](https://github.com/obspy/obspy/wiki) Python software.
 
-[![Build Status](https://travis-ci.org/anowacki/TauPy.jl.svg?branch=master)](https://travis-ci.org/anowacki/TauPy.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/x0g14wuls8yp19tv/branch/master?svg=true)](https://ci.appveyor.com/project/AndyNowacki/taupy-jl/branch/master)
-[![Coverage Status](https://coveralls.io/repos/github/anowacki/TauPy.jl/badge.svg?branch=master)](https://coveralls.io/github/anowacki/TauPy.jl?branch=master)
+[![Build Status](https://github.com/anowacki/TauPy.jl/workflows/CI/badge.svg)](https://github.com/anowacki/TauPy.jl/actions)
+[![codecov](https://codecov.io/gh/anowacki/TauPy.jl/graph/badge.svg?token=BNKAR08NW9)](https://codecov.io/gh/anowacki/TauPy.jl)
 
 ## Install
 
-To install on Julia versions v0.7 and above:
+To install on Julia versions v1.6 and above:
 ```julia
 julia> import Pkg; Pkg.add("https://github.com/anowacki/TauPy.jl")
 ```
@@ -167,7 +166,7 @@ event and station coordinates.
 Unfortunately, Obspy's travel time and raypath calculations are somewhat
 slow.  To speed up repeated calculations of the same times and raypaths,
 TauPy implements a cache.  To set the size of the cache, use the
-`TauPy.set_cache_size_mb!(size_mb)` function.  The cache can be clared
+`TauPy.set_cache_size_mb!(size_mb)` function.  The cache can be cleared
 using `TauPy.clear_cache!()`.  These functions are not exported.
 
 To disable the cache for individual calls to `path` or `travel_time`,
