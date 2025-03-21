@@ -19,9 +19,6 @@ installed automatically via its own Conda environment.  If you use your own
 Python with PyCall, then you may need to install ObsPy for you installation
 via `conda`, `pip`, or another means.
 
-(Older versions of TauPy compatible with Julia v0.6 can be installed by doing
-`Pkg.clone("https://github.com/anowacki/TauPy.jl")`.)
-
 ### Problems importing `geographiclib` or `obspy.taup`
 
 If you receive and error like `ERROR: InitError: Failed to import required Python
@@ -172,3 +169,13 @@ using `TauPy.clear_cache!()`.  These functions are not exported.
 To disable the cache for individual calls to `path` or `travel_time`,
 pass the keyword argument `cache=false`.
 
+## Related packages
+
+Global 1D traveltimes and raytracing are also available in the following
+alternative packages:
+
+- [TauP.jl](https://github.com/bvanderbeek/TauP.jl) wraps Phil Crotwell's
+  eminent [TauP](https://www.seis.sc.edu/taup/) Java suite of programs
+  under a LGPL-3 licence and using
+  [JavaCall.jl](https://github.com/JuliaInterop/JavaCall.jl)
+  to directly call the TauP library.
